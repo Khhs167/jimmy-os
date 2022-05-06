@@ -2,8 +2,8 @@
 // Created by khhs on 2022-04-13.
 //
 
-#include "k_stdio.h"
-#include "../drivers/screen.h"
+#include "kernel/k_stdio.h"
+#include "screen.h"
 
 void print(char* message){
     int i = 0;

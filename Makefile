@@ -1,10 +1,11 @@
 # Automatically expand to a list of existing files that match the patterns
 C_SOURCES = $(wildcard kernel/*.c drivers/*.c include/*.c)
+ASM_SOURCES = $(wildcard asm/*.asm)
 HEADERS = $(wildcard kernel/*.h drivers/*.h include/*.h)
 
 # Create a list of object files to build, simple by replacing the '.c' extention
 # of filenames in C_SOURCES with '.o'
-OBJ = ${C_SOURCES:.c=.o kernel/interrupt.o}
+OBJ = ${C_SOURCES:.c=.o} ${ASM_SOURCES:.asm=.o}
 
 CXX = gcc
 CFLAGS = -ffreestanding -Iinclude -std=gnu99 -fno-pic -m32 -mmanual-endbr
@@ -14,7 +15,9 @@ all: os-image
 
 # Run whatever we need
 run: all
-	qemu-system-i386 -drive file=os-image.iso,format=raw,index=0,if=floppy
+	qemu-system-i386 -fda os-image.iso -boot a
+debug: all
+	qemu-system-i386 -fda os-image.iso -boot a -no-reboot -d cpu_reset -s -S
 
 # This is the actual disk image that the computer loads
 # which is the combination of out compiled bootsector and kernel
@@ -24,7 +27,7 @@ os-image: boot/boot_sect.bin kernel.bin
 # This builds out kernel from two object files:
 # - the kernel entry, which jumps to main() in out kernel
 # - the compiled C kernel
-kernel.bin: kernel/kernel_entry.o ${OBJ}
+kernel.bin: boot/kernel_entry.o ${OBJ}
 	ld -o $@ $(LDFLAGS) $^
 
 # Build our object files
@@ -41,7 +44,7 @@ kernel.bin: kernel/kernel_entry.o ${OBJ}
 # Clear away all generated files
 clean:
 	rm -fr *.bin *.dis *.o os-image.iso
-	rm -fr kernel/*.o boot/*.bin drivers/*.o
+	rm -fr kernel/*.o boot/*.bin drivers/*.o asm/*.o
 
 # Disassemble our kernel - might be useful for debugging
 kernel.dis : kernel.bin

@@ -1,6 +1,6 @@
 #include "screen.h"
-#include "../kernel/low_level.h"
-#include "../kernel/util.h"
+#include "cpu/low_level.h"
+#include "util.h"
 
 int cursor_x = 0;
 int cursor_y = 0;

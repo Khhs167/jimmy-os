@@ -1,11 +1,11 @@
 #include "COMPILE_FLAGS.h"
-#include "isr.h"
+#include "cpu/isr.h"
 #include "util.h"
-#include "../drivers/keyboard.h"
-#include "../drivers/keys.h"
+#include "keyboard.h"
+#include "keys.h"
 #include "panic.h"
+#include "cpu/user_mode_inter.h"
 
-#include "k_stdio.h"
 
 unsigned int c_tick = 0;
 
@@ -27,13 +27,24 @@ void keyboard_callback(unsigned char scancode){
     }
 }
 
+void program(){
+    return;
+}
+
+#include "kernel/k_stdio.h"
+#include "cpu/gdt.h"
 
 void main(){
-    clear();
-    print("BOOTING JIMMOS\n");
-
     isr_install();
     asm volatile("sti");
 
+    initialize_descriptors();
+    clear();
+    print("BOOTING JIMMOS\n");
+
+
     init_keyboard(keyboard_callback);
+
+    //enter_user_mode(program);
+    return;
 }

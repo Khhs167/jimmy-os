@@ -1,9 +1,9 @@
-#include "isr.h"
-#include "idt.h"
-#include "../kernel/util.h"
+#include "cpu/isr.h"
+#include "cpu/idt.h"
+#include "util.h"
 #include "stdint.h"
-#include "../kernel/low_level.h"
-#include "k_stdio.h"
+#include "cpu/low_level.h"
+#include "kernel/k_stdio.h"
 #include "panic.h"
 
 isr_t interrupt_handlers[256];
@@ -126,7 +126,11 @@ void isr_handler(registers_t r) {
     print("\n");
     print(exception_messages[r.int_no]);
     print("\n");
-    kpanic(exception_messages[r.int_no]);
+    if(r.int_no < 32) {
+        kpanic(exception_messages[r.int_no], r.int_no);
+    } else{
+        kpanic("", r.int_no);
+    }
 }
 
 void register_interrupt_handler(uint8_t n, isr_t handler) {

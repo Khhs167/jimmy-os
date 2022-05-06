@@ -1,7 +1,7 @@
-#include "../kernel/low_level.h"
-#include "../kernel/util.h"
-#include "../kernel/isr.h"
-#include "k_stdio.h"
+#include "cpu/low_level.h"
+#include "util.h"
+#include "cpu/isr.h"
+#include "kernel/k_stdio.h"
 
 void (*callback)(unsigned char);
 

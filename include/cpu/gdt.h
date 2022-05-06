@@ -37,9 +37,9 @@ gdt_ptr;
 
 gdt_ptr* gdt_pointer;
 
-static gdt_entry_bits gdt[6]; // one null segment, two ring 0 segments, two ring 3 segments, TSS segment
+gdt_entry_bits gdt[6]; // one null segment, two ring 0 segments, two ring 3 segments, TSS segment
+gdt_entry_bits gdt_code;
 
-extern void gdt_flush();
 void initialize_descriptors();
 
 

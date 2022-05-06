@@ -17,7 +17,7 @@ all: os-image
 run: all
 	qemu-system-i386 -fda os-image.iso -boot a
 debug: all
-	qemu-system-i386 -fda os-image.iso -boot a -no-reboot -d cpu_reset -s -S
+	qemu-system-i386 -fda os-image.iso -boot a -no-reboot -d cpu_reset
 
 # This is the actual disk image that the computer loads
 # which is the combination of out compiled bootsector and kernel

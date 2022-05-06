@@ -35,16 +35,16 @@ void program(){
 #include "cpu/gdt.h"
 
 void main(){
-    isr_install();
-    asm volatile("sti");
+    //isr_install();
+    //asm volatile("sti");
 
     initialize_descriptors();
-    clear();
-    print("BOOTING JIMMOS\n");
+    //clear();
+    //print("BOOTING JIMMOS\n");
 
 
-    init_keyboard(keyboard_callback);
+    //init_keyboard(keyboard_callback);
 
     //enter_user_mode(program);
-    return;
+    //return;
 }

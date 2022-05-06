@@ -5,16 +5,17 @@
 #include "cpu/gdt.h"
 #include "kernel/k_stdio.h"
 
-extern void jump_gdt();
+extern void gdt_flush();
 
 void initialize_descriptors(){
 
     gdt_pointer->limit = (sizeof(gdt_entry_bits) * 6) - 1;
     gdt_pointer->base = (unsigned int)&gdt;
+    gdt_code = gdt[1];
 
     // (ring 0 segments)
-    gdt_entry_bits *ring0_code = &gdt[0];
-    gdt_entry_bits *ring0_data = &gdt[1];
+    gdt_entry_bits *ring0_code = &gdt[1];
+    gdt_entry_bits *ring0_data = &gdt[2];
 
     ring0_code->limit_low = 0xFFFF;
     ring0_code->base_low = 0;
@@ -58,8 +59,7 @@ void initialize_descriptors(){
     *ring3_data = *ring3_code; // contents are similar so save time by copying
     ring3_data->code = 0; // not code but data
 
-    asm inline ("lgdt (%0)" : : "p" (gdt_pointer));
-    //gdt_flush((unsigned int)gdt_pointer);
+    gdt_flush();
 
     //install_tss(&gdt[5]); // TSS segment will be the fifth
 
